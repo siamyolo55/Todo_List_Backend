@@ -23,6 +23,8 @@ handler.handleReqRes = (req,res) => {
     const queryStringObject = parsedUrl.query
     const headersObject = req.headers
 
+    //console.log(trimmedPath,method,queryStringObject)
+
     const requestProperties = {
         parsedUrl,
         pathname,
@@ -41,11 +43,11 @@ handler.handleReqRes = (req,res) => {
     res.writeHead("Access-Control-Allow-Origin", "*");
     res.writeHead("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
 
-    res.writeHead(201,{
+    /* res.writeHead(201,{
         'Access-Control-Allow-Origin' : '*',
         'Access-Control-Allow-Methods' : 'POST,PUT,DELETE,OPTIONS',
         'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept'
-    });
+    }); */
 
 
     // data gathering
@@ -53,12 +55,14 @@ handler.handleReqRes = (req,res) => {
     const decoder = new StringDecoder('utf-8')
     req.on('data',(buffer) => {
         data += decoder.write(buffer)
+        //console.log('1')
         //data += JSON.stringify(buffer)
         //data += buffer
     })
     req.on('end',(buffer) => {
         if(buffer !== undefined){
             data += decoder.write(buffer)
+            //console.log('2')
         }
         //data += JSON.stringify(buffer)
         //data += buffer
@@ -66,6 +70,7 @@ handler.handleReqRes = (req,res) => {
         //let stringData = JSON.stringify(data)
 
         requestProperties.body = parseJSON(data)
+        //console.log(requestProperties.body)
 
         const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandler
 

@@ -53,19 +53,32 @@ async function updateUserData(data){
         const user = await User.find({email:data.email})
         //console.log(user,1)
         //console.log(user[0].todos.length)
-        for(let i=0 ;i<user[0].todos.length; i++){
-            //console.log(user[0].todos[i].uniq)
-            if(user[0].todos[i].uniq === data.uniq){
-                //console.log('matched condition')
-                user[0].todos[i].event = data.event
-                user[0].todos[i].description = data.description
-                user[0].todos[i].time = data.time
-                user[0].todos[i].date = data.date
-                user[0].todos[i].uniq = data.uniq
-                user[0].todos[i].priority = data.priority
-                user[0].todos[i].check = data.check
-                await user[0].save()
-                return todos = user[0].todos
+        if(data.uniq != undefined && (data.event == null || data.event == undefined)){
+            for(let i=0 ;i<user[0].todos.length; i++){
+                //console.log(user[0].todos[i].uniq)
+                if(user[0].todos[i].uniq === data.uniq){
+                    //console.log('matched condition')
+                    user[0].todos[i].check = data.check
+                    await user[0].save()
+                    return todos = user[0].todos
+                }
+            }
+        }
+        else{
+            for(let i=0 ;i<user[0].todos.length; i++){
+                //console.log(user[0].todos[i].uniq)
+                if(user[0].todos[i].uniq === data.uniq){
+                    //console.log('matched condition')
+                    user[0].todos[i].event = data.event
+                    user[0].todos[i].description = data.description
+                    user[0].todos[i].time = data.time
+                    user[0].todos[i].date = data.date
+                    user[0].todos[i].uniq = data.uniq
+                    user[0].todos[i].priority = data.priority
+                    user[0].todos[i].check = data.check
+                    await user[0].save()
+                    return todos = user[0].todos
+                }
             }
         }
     }
@@ -127,8 +140,8 @@ handler._home.put = async (requestProperties,callback) => {
 }
 
 handler._home.delete = async (requestProperties,callback) => {
-    const data = requestProperties.body
-
+    const data = requestProperties.queryStringObject
+    console.log(data)
     let todos = await deleteUserData(data)
 
     callback(200,{

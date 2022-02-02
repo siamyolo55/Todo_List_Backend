@@ -37,7 +37,17 @@ async function run(){
                     uniq : uuid(),
                     priority : 1,
                     check : true
+                },
+                {
+                    event : "Binner",
+                    description : "khao",
+                    time : "13:30",
+                    date : "2021-12-17",
+                    uniq : uuid(),
+                    priority : 3,
+                    check : true
                 }
+
             ]
         })
         console.log(user)
