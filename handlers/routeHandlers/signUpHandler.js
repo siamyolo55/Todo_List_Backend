@@ -6,8 +6,14 @@ const User = require('../../db/User')
 // module scaffolding
 const handler = {}
 
+const url = "mongodb+srv://siam-titan:abrarsiamtitan@cluster0.98epk.mongodb.net/UserData?retryWrites=true&w=majority"
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
+
 // mongoose connection
-mongoose.connect("mongodb://127.0.0.1:27017/UserData")
+mongoose.connect(url,connectionParams)
 
 // uuid generator
 function uuid() {
@@ -30,15 +36,12 @@ async function addToDb(requestProperties){
             email : email,
             password : password
         })
-        //console.log(user)
         await user.save()
     }
     catch(e){
         console.log("didn't work")
     }
 }
-
-
 
 
 handler.signUpHandler = (requestProperties,callback) => {
@@ -54,6 +57,12 @@ handler.signUpHandler = (requestProperties,callback) => {
 }
 
 handler._signUp = {}
+
+handler._signUp.get = (requestProperties,callback) => {
+    callback(200,{
+        message: 'server running'
+    })
+}
 
 handler._signUp.post = (requestProperties,callback) => {
 

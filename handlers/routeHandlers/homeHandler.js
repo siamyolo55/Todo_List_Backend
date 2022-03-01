@@ -8,8 +8,13 @@ const handler = {}
 
 
 // mongodb connection
+const url = "mongodb+srv://siam-titan:abrarsiamtitan@cluster0.98epk.mongodb.net/UserData?retryWrites=true&w=majority"
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 
-mongoose.connect("mongodb://127.0.0.1:27017/UserData")
+mongoose.connect(url,connectionParams)
 
 // uuid generator
 function uuid() {
@@ -24,7 +29,6 @@ function uuid() {
 async function getUserData(email,password){
     try{
         const user = await User.find({email:email,password:password})
-        console.log(user[0])
         return user[0].todos
     }
     catch(e){
@@ -49,15 +53,10 @@ async function addData(requestProperties){
 
 async function updateUserData(data){
     try{
-        //console.log(data.email)
         const user = await User.find({email:data.email})
-        //console.log(user,1)
-        //console.log(user[0].todos.length)
         if(data.uniq != undefined && (data.event == null || data.event == undefined)){
             for(let i=0 ;i<user[0].todos.length; i++){
-                //console.log(user[0].todos[i].uniq)
                 if(user[0].todos[i].uniq === data.uniq){
-                    //console.log('matched condition')
                     user[0].todos[i].check = data.check
                     await user[0].save()
                     return todos = user[0].todos
@@ -66,9 +65,7 @@ async function updateUserData(data){
         }
         else{
             for(let i=0 ;i<user[0].todos.length; i++){
-                //console.log(user[0].todos[i].uniq)
                 if(user[0].todos[i].uniq === data.uniq){
-                    //console.log('matched condition')
                     user[0].todos[i].event = data.event
                     user[0].todos[i].description = data.description
                     user[0].todos[i].time = data.time
@@ -95,7 +92,6 @@ async function deleteUserData(data){
             if(user[0].todos[i].uniq === data.uniq){
                 user[0].todos.splice(i,1)
                 await user[0].save()
-                console.log(user[0].todos)
                 return todos = user[0].todos
             }
         }
@@ -106,7 +102,7 @@ async function deleteUserData(data){
 }
 
 handler.homeHandler = (requestProperties,callback) => {
-    const acceptedMethods = ['post','put','delete']
+    const acceptedMethods = ['get','post','put','delete']
     if(acceptedMethods.indexOf(requestProperties.method) > -1 ){
         handler._home[requestProperties.method](requestProperties,callback)    
     }
@@ -118,6 +114,12 @@ handler.homeHandler = (requestProperties,callback) => {
 }
 
 handler._home = {}
+
+handler._home.get = (requestProperties,callback) => {
+    callback(200,{
+        message: 'server running'
+    })
+}
 
 handler._home.post = async (requestProperties,callback) => {
     const email = requestProperties.body.email

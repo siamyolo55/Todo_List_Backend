@@ -7,8 +7,13 @@ const User = require('../../db/User')
 const handler = {}
 
 // mongodb connection
+const url = "mongodb+srv://siam-titan:abrarsiamtitan@cluster0.98epk.mongodb.net/UserData?retryWrites=true&w=majority"
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 
-mongoose.connect("mongodb://127.0.0.1:27017/UserData")
+mongoose.connect(url,connectionParams)
 
 
 async function getUserData(email,password){
@@ -44,11 +49,8 @@ handler._login.post = async (requestProperties,callback) => {
     // received email and password , next up database addition
 
     let check = await getUserData(email,password)
-    //console.log(userData, "from here")
-    //console.log(check)
     let statusCode = (check == true) ? 201 : 204
     let message = (check == true) ? 'login successful' : 'email or password wrong'
-    //console.log(statusCode,handler.data)
 
     callback(statusCode,{
         userData : handler.data,

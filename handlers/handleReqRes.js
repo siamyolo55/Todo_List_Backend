@@ -1,14 +1,10 @@
 // dependencies
 const url = require('url')
-//const fs = require('fs')
 const { StringDecoder } = require('string_decoder');
-//const ejs = require('ejs')
-//const pug = require('pug')
 const routes = require('../routes')
 const {notFoundHandler} = require('./routeHandlers/notFoundHandler')
 const {parseJSON} = require('../utilities/utilities')
-//const cors = require('cors')
-//
+
 // module scaffolding
 const handler = {}
 
@@ -23,8 +19,6 @@ handler.handleReqRes = (req,res) => {
     const queryStringObject = parsedUrl.query
     const headersObject = req.headers
 
-    //console.log(trimmedPath,method,queryStringObject)
-
     const requestProperties = {
         parsedUrl,
         pathname,
@@ -33,21 +27,6 @@ handler.handleReqRes = (req,res) => {
         queryStringObject,
         headersObject
     }
-    // access to all
-    /* res.writeHead(201,{
-        'Content-Type' : 'application/json'
-    }) */
-
-    /* res.writeHead('Access-Control-Allow-Methods', 'DELETE, POST, GET, PUT, OPTIONS')
-    res.writeHead('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-    res.writeHead("Access-Control-Allow-Origin", "*");
-    res.writeHead("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); */
-
-    /* res.writeHead(201,{
-        'Access-Control-Allow-Origin' : '*',
-        'Access-Control-Allow-Methods' : 'POST,PUT,DELETE,OPTIONS',
-        'Access-Control-Allow-Headers' : 'Origin, X-Requested-With, Content-Type, Accept'
-    }); */
 
 
     // data gathering
@@ -55,22 +34,13 @@ handler.handleReqRes = (req,res) => {
     const decoder = new StringDecoder('utf-8')
     req.on('data',(buffer) => {
         data += decoder.write(buffer)
-        //console.log('1')
-        //data += JSON.stringify(buffer)
-        //data += buffer
     })
     req.on('end',(buffer) => {
         if(buffer !== undefined){
             data += decoder.write(buffer)
-            //console.log('2')
         }
-        //data += JSON.stringify(buffer)
-        //data += buffer
-
-        //let stringData = JSON.stringify(data)
 
         requestProperties.body = parseJSON(data)
-        //console.log(requestProperties.body)
 
         const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandler
 

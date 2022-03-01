@@ -1,7 +1,13 @@
 const mongoose = require('mongoose')
 const Users = require('./User')
 
-mongoose.connect("mongodb://127.0.0.1:27017/UserData")
+
+const url = "mongodb+srv://siam-titan:abrarsiamtitan@cluster0.98epk.mongodb.net/UserData?retryWrites=true&w=majority"
+const connectionParams = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
+mongoose.connect(url,connectionParams)
 
 function uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
